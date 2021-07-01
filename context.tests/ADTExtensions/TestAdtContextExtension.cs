@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using context.tests.Extensions;
@@ -21,7 +22,7 @@ namespace Health.Direct.Context.Tests.ADTExtensions
         private const string AdtTypeCodeSystem = "2.16.840.1.113883.6.1";
         private const string AdtTypeCode = "lncct-notif-01";
         private const string CreationTime = "20210416102205.156-4000";
-
+        
         [Fact]
         public void ExampleAdtContextBuildWithObjects()
         {
@@ -49,6 +50,8 @@ namespace Health.Direct.Context.Tests.ADTExtensions
                 ContentTypeCode = AdtTypeCode
             };
 
+            DateTime currentDateTime = DateTime.UtcNow;
+
             contextBuilder
                 .WithContentId(MimeUtils.GenerateMessageId())
                 .WithDisposition("metadata.txt")
@@ -75,7 +78,7 @@ namespace Health.Direct.Context.Tests.ADTExtensions
                         PostalCode = "12345"
                     }
                 )
-                .WithCreationTime(CreationTime)
+                .WithCreationTime(currentDateTime)
                 .WithFormatCode(formatCode)
                 .WithContextContentType(contextContentType)
                 .WithAdtTypeCode(adtTypeCode);
@@ -185,7 +188,7 @@ namespace Health.Direct.Context.Tests.ADTExtensions
             ///
             /// ADT Context 1.1 Extensions
             ///
-            Assert.Equal(CreationTime,contextParsed.Metadata.CreationTime);
+            Assert.Equal(currentDateTime.ToString("yyyyMMddHHmmsszzz"),contextParsed.Metadata.CreationTime);
             Assert.Equal(ContextCodeSystem, contextParsed.Metadata.ContextContentType.ContentTypeSystem);
             Assert.Equal(ContextCode, contextParsed.Metadata.ContextContentType.ContentTypeCode);
             Assert.Equal(FormatCodeUrn, contextParsed.Metadata.FormatCode.Urn);
