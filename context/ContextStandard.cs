@@ -484,14 +484,14 @@ namespace Health.Direct.Context
         public const string CreationTime = "creation-time";
 
         /// <summary>
-        /// Context content type for <c>ihe-format-code</c> header
+        /// Context content type for <c>format-code</c> header
         /// </summary>
         public class FormatCode
         {
             /// <summary>
-            /// Name for the <c>ihe-format-code</c> header
+            /// Name for the <c>format-code</c> header
             /// </summary>
-            public const string Label = "ihe-format-code";
+            public const string Label = "format-code";
 
             public const int FormatCodeElementCount = 4;
             /// <summary>
@@ -505,70 +505,35 @@ namespace Health.Direct.Context
                 Unknown = 0,
 
                 /// <summary>
-                /// The <c>urn ihe-format-code-parameter</c>
+                /// The <c>urn format-code-parameter</c>
                 /// </summary>
                 Urn,
 
                 /// <summary>
-                /// The <c>implementationguide ihe-format-code-parameter</c>
+                /// The <c>implementationguide format-code-parameter</c>
                 /// </summary>
                 ImplementationGuide,
 
                 /// <summary>
-                /// The <c>messagetype ihe-format-code-parameter</c>
+                /// The <c>messagetype format-code-parameter</c>
                 /// </summary>
                 NessageType,
 
                 /// <summary>
-                /// The <c>version ihe-format-code-parameter</c>
+                /// The <c>version format-code-parameter</c>
                 /// </summary>
                 Version
             }
         }
 
         /// <summary>
-        /// Context content type for <c>content-type</c> header
+        /// Name for <c>content-type-code</c> header
         /// </summary>
-        public class ContextContentType
-        {
-            /// <summary>
-            /// Name for the <c>content-type</c> header
-            /// </summary>
-            public const string Label = "context-content-type";
-            
-            public const string OutputLabel = "content-type";
+        public const string ContextContentType = "content-type-code";
 
-            public const int ContextContentTypeElementCount = 4;
-            /// <summary>
-            /// content-type-value 
-            /// </summary>
-            public enum ContextContentTypeParameter
-            {
-                /// <summary>
-                /// Unknown.
-                /// </summary>
-                Unknown = 0,
-
-                /// <summary>
-                /// The <c>code content-type-parameter</c>
-                /// </summary>
-                Code,
-
-                /// <summary>
-                /// The <c>display content-type-parameter</c>
-                /// </summary>
-                Display,
-
-                /// <summary>
-                /// The <c>code-system content-type-parameter</c>
-                /// </summary>
-                CodeSystem,
-
-                /// <summary>
-                /// The <c>code-system-name content-type-parameter</c>
-                /// </summary>
-                CodeSystemName
-            }
-        }
+        /// <summary>
+        /// Name for <c>type-code</c> header
+        /// </summary>
+        public const string AdtTypeCode = "type-code";
     }
 }

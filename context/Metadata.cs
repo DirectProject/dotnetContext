@@ -228,7 +228,7 @@ namespace Health.Direct.Context
             {
                 var formatCodeValue = GetValue(ContextStandard.FormatCode.Label);
 
-                if (String.IsNullOrWhiteSpace(formatCodeValue))
+                if (string.IsNullOrWhiteSpace(formatCodeValue))
                 {
                     return null;
                 }
@@ -241,17 +241,31 @@ namespace Health.Direct.Context
             }
         }
 
+        public AdtTypeCode AdtTypeCode
+        {
+            get
+            {
+                var adtTypeCodeValue = GetValue(ContextStandard.AdtTypeCode);
+
+                if (string.IsNullOrEmpty(adtTypeCodeValue))
+                {
+                    return null;
+                }
+
+                return ContextParser.ParseAdtTypeCode(adtTypeCodeValue);
+            }
+            set
+            {
+                SetValue(ContextStandard.AdtTypeCode, value.ToString());
+            }
+        }
         public ContextContentType ContextContentType
         {
             get
             {
-                var contentTypeCode = GetValue(ContextStandard.ContextContentType.Label);
+                var contentTypeCode = GetValue(ContextStandard.ContextContentType);
 
-                if (String.IsNullOrWhiteSpace(contentTypeCode))
-                {
-                    contentTypeCode = GetValue(ContextStandard.ContextContentType.OutputLabel);
-                }
-                if (String.IsNullOrWhiteSpace(contentTypeCode))
+                if (string.IsNullOrWhiteSpace(contentTypeCode))
                 {
                     return null;
                 }
@@ -260,7 +274,7 @@ namespace Health.Direct.Context
             }
             set
             {
-                SetValue(ContextStandard.ContextContentType.Label, value.ToString());
+                SetValue(ContextStandard.ContextContentType, value.ToString());
             }
         }
 
@@ -295,7 +309,8 @@ namespace Health.Direct.Context
             // ADT context 1.1 extensions
             sb.AppendHeader(ContextStandard.CreationTime, CreationTime);
             sb.AppendHeader(ContextStandard.FormatCode.Label, FormatCode?.ToString());
-            sb.AppendHeader(ContextStandard.ContextContentType.OutputLabel, ContextContentType?.ToString());
+            sb.AppendHeader(ContextStandard.ContextContentType, ContextContentType?.ToString());
+            sb.AppendHeader(ContextStandard.AdtTypeCode, AdtTypeCode?.ToString());
 
             return sb.ToString();
         }

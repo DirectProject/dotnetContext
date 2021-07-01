@@ -292,14 +292,14 @@ namespace Health.Direct.Context
         /// <returns></returns>
         public ContextBuilder WithFormatCode(string urn, string implementationGuide, string messageType, string version)
         {
-            if (urn.IsNullOrWhiteSpace() || 
+            if (urn.IsNullOrWhiteSpace() ||
                 implementationGuide.IsNullOrWhiteSpace() ||
-                messageType.IsNullOrWhiteSpace() || 
+                messageType.IsNullOrWhiteSpace() ||
                 version.IsNullOrWhiteSpace())
             {
                 return this;
             }
-            
+
             _directContext.Metadata.FormatCode = new FormatCode()
             {
                 Urn = urn,
@@ -330,33 +330,64 @@ namespace Health.Direct.Context
         /// <summary>
         /// ContextContentType builder from individual parameters.
         /// </summary>
-        /// <remarks>All parameters must have values to build ContextContentType header</remarks>
-        /// <param name="code"></param>
-        /// <param name="display"></param>
         /// <param name="codeSystem"></param>
-        /// <param name="codeSystemName"></param>
+        /// <param name="code"></param>
         /// <returns></returns>
-        public ContextBuilder WithContextContentType(string code, string display, string codeSystem, string codeSystemName)
+        public ContextBuilder WithContextContentType(string codeSystem, string code)
         {
             if (code.IsNullOrWhiteSpace() ||
-                display.IsNullOrWhiteSpace() ||
-                codeSystem.IsNullOrWhiteSpace() ||
-                codeSystemName.IsNullOrWhiteSpace())
+                codeSystem.IsNullOrWhiteSpace())
             {
                 return this;
             }
 
             _directContext.Metadata.ContextContentType = new ContextContentType()
             {
-                CodeSystem = codeSystem,
-                Code = code,
-                Display = display,
-                CodeSystemName = codeSystemName
+                ContentTypeCode = code,
+                ContentTypeSystem = codeSystem
             };
 
             return this;
         }
 
+        /// <summary>
+        /// AdtTypeCode parameter.
+        /// </summary>
+        /// <param name="adtTypeCode"></param>
+        /// <returns></returns>
+        public ContextBuilder WithAdtTypeCode(AdtTypeCode adtTypeCode)
+        {
+            if (adtTypeCode == null)
+            {
+                return this;
+            }
+
+            _directContext.Metadata.AdtTypeCode = adtTypeCode;
+            return this;
+        }
+
+        /// <summary>
+        /// AdtTypeCode builder from individual parameters.
+        /// </summary>
+        /// <param name="codeSystem"></param>
+        /// <param name="code"></param>
+        /// <returns></returns>
+        public ContextBuilder WithAdtTypeCode(string codeSystem, string code)
+        {
+            if (code.IsNullOrWhiteSpace() ||
+                codeSystem.IsNullOrWhiteSpace())
+            {
+                return this;
+            }
+
+            _directContext.Metadata.AdtTypeCode = new AdtTypeCode()
+            {
+                ContentTypeCode = code,
+                ContentTypeSystem = codeSystem
+            };
+
+            return this;
+        }
         #endregion
 
         /// <summary>
