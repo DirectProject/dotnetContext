@@ -25,9 +25,9 @@ purpose: research
 creation-time: 20210416080510.1245-4000
 patient: givenName=3DJohn; surname=3DDoe; middleName=3DJacob; dateOfBi=
 rth=3D1961-12-31; gender=3DM; postalCode=3D12345
-ihe-format-code: ihc:pcc/HL7+N0D/ADT_A01/2.5.1
-content-type-code: 79429-7/Admission notification note/urn:oid:2.16=
-.840.1.113883.6.1/LOINC
+format-code: dt-org:dsm:adt-en:1.0
+type-code: 2.16.840.1.113883.6.1:lncct-notif-01
+content-type-code: 2.16.840.1.113883.6.1:79429-7
 
 --=-1GehjmVTXFcPRv+tjzABIA==
 Content-Type: application/pdf; name=report.pdf

@@ -146,7 +146,7 @@ namespace Health.Direct.Context
         #region ADT Context v1.1 Extension properties
         internal static FormatCode ParseFormatCode(string headerValue)
         {
-            var typeValue = Split(headerValue, new[] { '/' }, ContextError.InvalidType);
+            var typeValue = Split(headerValue, new[] { ':' }, ContextError.InvalidFormatCode);
 
             if (typeValue.Count != ContextStandard.FormatCode.FormatCodeElementCount)
             {
@@ -162,21 +162,35 @@ namespace Health.Direct.Context
             };
         }
 
+        internal static AdtTypeCode ParseAdtTypeCode(string headerValue)
+        {
+            var typeCode = Split(headerValue, new[] {':'}, ContextError.InvalidTypeCode);
+
+            if (typeCode.Count != 2)
+            {
+                throw new ContextException(ContextError.InvalidTypeCode);
+            }
+
+            return new AdtTypeCode()
+            {
+                ContentTypeSystem = typeCode[0],
+                ContentTypeCode = typeCode[1]
+            };
+        }
+
         internal static ContextContentType ParseContextContentType(string headerValue)
         {
-            var typeValue = Split(headerValue, new[] { '/' }, ContextError.InvalidType);
+            var typeValue = Split(headerValue, new[] { ':' }, ContextError.InvalidContextContentType);
 
-            if (typeValue.Count != ContextStandard.ContextContentType.ContextContentTypeElementCount)
+            if (typeValue.Count != 2)
             {
-                throw new ContextException(ContextError.InvalidFormatCode);
+                throw new ContextException(ContextError.InvalidContextContentType);
             }
 
             return new ContextContentType()
             {
-                Code = typeValue[0],
-                Display = typeValue[1],
-                CodeSystem = typeValue[2],
-                CodeSystemName = typeValue[3]
+                ContentTypeSystem = typeValue[0],
+                ContentTypeCode = typeValue[1]
             };
         }
         #endregion

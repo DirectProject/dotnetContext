@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Linq;
 using System.Text;
 using context.tests.Extensions;
@@ -10,16 +11,16 @@ namespace Health.Direct.Context.Tests.ADTExtensions
 {
     public class TestAdtContextExtension
     {
-        private const string ImplementationGuide = "HL7+N0D";
-        private const string MessageType = "ADT_A01";
-        private const string ContextVersion = "2.5.1";
-        private const string Urn = "ihc:pcc";
-        private const string CodeSystemName = "LOINC";
+        private const string FormatCodeUrn = "dt-org";
+        private const string FormatCodeImplementationGuide = "dsm";
+        private const string FormatCodeMessageType = "adt-en";
+        private const string FormatCodeVersion = "1.0";
         private const string ContextCode = "79429-7";
-        private const string CodeSystem = "urn:oid:2.16.840.1.113883.6.1";
-        private const string ContextLongName = "Admission notification note";
+        private const string ContextCodeSystem = "2.16.840.1.113883.6.1";
+        private const string AdtTypeCodeSystem = "2.16.840.1.113883.6.1";
+        private const string AdtTypeCode = "lncct-notif-01";
         private const string CreationTime = "20210416102205.156-4000";
-
+        
         [Fact]
         public void ExampleAdtContextBuildWithObjects()
         {
@@ -29,19 +30,25 @@ namespace Health.Direct.Context.Tests.ADTExtensions
             var contextBuilder = new ContextBuilder();
             var formatCode = new FormatCode()
             {
-                ImplementationGuide = ImplementationGuide,
-                MessageType = MessageType,
-                Version = ContextVersion,
-                Urn = Urn
+                Urn = FormatCodeUrn,
+                ImplementationGuide = FormatCodeImplementationGuide,
+                MessageType = FormatCodeMessageType,
+                Version = FormatCodeVersion
             };
 
             var contextContentType = new ContextContentType()
             {
-                CodeSystemName = CodeSystemName,
-                Code = ContextCode,
-                CodeSystem = CodeSystem,
-                Display = ContextLongName
+                ContentTypeCode = ContextCode,
+                ContentTypeSystem = ContextCodeSystem
             };
+
+            var adtTypeCode = new AdtTypeCode()
+            {
+                ContentTypeSystem = AdtTypeCodeSystem,
+                ContentTypeCode = AdtTypeCode
+            };
+
+            DateTime currentDateTime = DateTime.UtcNow;
 
             contextBuilder
                 .WithContentId(MimeUtils.GenerateMessageId())
@@ -69,9 +76,10 @@ namespace Health.Direct.Context.Tests.ADTExtensions
                         PostalCode = "12345"
                     }
                 )
-                .WithCreationTime(CreationTime)
+                .WithCreationTime(currentDateTime)
                 .WithFormatCode(formatCode)
-                .WithContextContentType(contextContentType);
+                .WithContextContentType(contextContentType)
+                .WithAdtTypeCode(adtTypeCode);
 
             var context = contextBuilder.Build();
 
@@ -178,15 +186,15 @@ namespace Health.Direct.Context.Tests.ADTExtensions
             ///
             /// ADT Context 1.1 Extensions
             ///
-            Assert.Equal(CreationTime,contextParsed.Metadata.CreationTime);
-            Assert.Equal(ContextLongName, contextParsed.Metadata.ContextContentType.Display);
-            Assert.Equal(ContextCode, contextParsed.Metadata.ContextContentType.Code);
-            Assert.Equal(CodeSystemName, contextParsed.Metadata.ContextContentType.CodeSystemName);
-            Assert.Equal(CodeSystem, contextParsed.Metadata.ContextContentType.CodeSystem);
-            Assert.Equal(ImplementationGuide, contextParsed.Metadata.FormatCode.ImplementationGuide);
-            Assert.Equal(MessageType, contextParsed.Metadata.FormatCode.MessageType);
-            Assert.Equal(Urn, contextParsed.Metadata.FormatCode.Urn);
-            Assert.Equal(ContextVersion, contextParsed.Metadata.FormatCode.Version);
+            Assert.Equal(currentDateTime.ToString("yyyyMMddHHmmsszzz"),contextParsed.Metadata.CreationTime);
+            Assert.Equal(ContextCodeSystem, contextParsed.Metadata.ContextContentType.ContentTypeSystem);
+            Assert.Equal(ContextCode, contextParsed.Metadata.ContextContentType.ContentTypeCode);
+            Assert.Equal(FormatCodeUrn, contextParsed.Metadata.FormatCode.Urn);
+            Assert.Equal(FormatCodeMessageType, contextParsed.Metadata.FormatCode.MessageType);
+            Assert.Equal(FormatCodeImplementationGuide, contextParsed.Metadata.FormatCode.ImplementationGuide);
+            Assert.Equal(FormatCodeVersion, contextParsed.Metadata.FormatCode.Version);
+            Assert.Equal(AdtTypeCodeSystem, contextParsed.Metadata.AdtTypeCode.ContentTypeSystem);
+            Assert.Equal(AdtTypeCode, contextParsed.Metadata.AdtTypeCode.ContentTypeCode);
         }
 
         [Fact]
@@ -224,8 +232,9 @@ namespace Health.Direct.Context.Tests.ADTExtensions
                     }
                 )
                 .WithCreationTime(CreationTime)
-                .WithFormatCode(Urn, ImplementationGuide, MessageType, ContextVersion)
-                .WithContextContentType(ContextCode, ContextLongName, CodeSystem, CodeSystemName);
+                .WithFormatCode(FormatCodeUrn, FormatCodeImplementationGuide, FormatCodeMessageType, FormatCodeVersion)
+                .WithContextContentType(ContextCodeSystem, ContextCode)
+                .WithAdtTypeCode(AdtTypeCodeSystem, AdtTypeCode);
 
             var context = contextBuilder.Build();
 
@@ -334,14 +343,14 @@ namespace Health.Direct.Context.Tests.ADTExtensions
             /// ADT Context 1.1 Extensions
             ///
             Assert.Equal(CreationTime, contextParsed.Metadata.CreationTime);
-            Assert.Equal(ContextLongName, contextParsed.Metadata.ContextContentType.Display);
-            Assert.Equal(ContextCode, contextParsed.Metadata.ContextContentType.Code);
-            Assert.Equal(CodeSystemName, contextParsed.Metadata.ContextContentType.CodeSystemName);
-            Assert.Equal(CodeSystem, contextParsed.Metadata.ContextContentType.CodeSystem);
-            Assert.Equal(ImplementationGuide, contextParsed.Metadata.FormatCode.ImplementationGuide);
-            Assert.Equal(MessageType, contextParsed.Metadata.FormatCode.MessageType);
-            Assert.Equal(Urn, contextParsed.Metadata.FormatCode.Urn);
-            Assert.Equal(ContextVersion, contextParsed.Metadata.FormatCode.Version);
+            Assert.Equal(ContextCodeSystem, contextParsed.Metadata.ContextContentType.ContentTypeSystem);
+            Assert.Equal(ContextCode, contextParsed.Metadata.ContextContentType.ContentTypeCode);
+            Assert.Equal(FormatCodeUrn, contextParsed.Metadata.FormatCode.Urn);
+            Assert.Equal(FormatCodeMessageType, contextParsed.Metadata.FormatCode.MessageType);
+            Assert.Equal(FormatCodeImplementationGuide, contextParsed.Metadata.FormatCode.ImplementationGuide);
+            Assert.Equal(FormatCodeVersion, contextParsed.Metadata.FormatCode.Version);
+            Assert.Equal(AdtTypeCodeSystem, contextParsed.Metadata.AdtTypeCode.ContentTypeSystem);
+            Assert.Equal(AdtTypeCode, contextParsed.Metadata.AdtTypeCode.ContentTypeCode);
         }
 
         [Theory]
@@ -392,14 +401,14 @@ namespace Health.Direct.Context.Tests.ADTExtensions
             /// ADT Context 1.1 Extensions
             ///
             Assert.Equal("20210416080510.1245-4000", context.Metadata.CreationTime);
-            Assert.Equal(ContextLongName, context.Metadata.ContextContentType.Display);
-            Assert.Equal(ContextCode, context.Metadata.ContextContentType.Code);
-            Assert.Equal(CodeSystemName, context.Metadata.ContextContentType.CodeSystemName);
-            Assert.Equal(CodeSystem, context.Metadata.ContextContentType.CodeSystem);
-            Assert.Equal(ImplementationGuide, context.Metadata.FormatCode.ImplementationGuide);
-            Assert.Equal(MessageType, context.Metadata.FormatCode.MessageType);
-            Assert.Equal(Urn, context.Metadata.FormatCode.Urn);
-            Assert.Equal(ContextVersion, context.Metadata.FormatCode.Version);
+            Assert.Equal(ContextCodeSystem, context.Metadata.ContextContentType.ContentTypeSystem);
+            Assert.Equal(ContextCode, context.Metadata.ContextContentType.ContentTypeCode);
+            Assert.Equal(FormatCodeUrn, context.Metadata.FormatCode.Urn);
+            Assert.Equal(FormatCodeMessageType, context.Metadata.FormatCode.MessageType);
+            Assert.Equal(FormatCodeImplementationGuide, context.Metadata.FormatCode.ImplementationGuide);
+            Assert.Equal(FormatCodeVersion, context.Metadata.FormatCode.Version);
+            Assert.Equal(AdtTypeCodeSystem, context.Metadata.AdtTypeCode.ContentTypeSystem);
+            Assert.Equal(AdtTypeCode, context.Metadata.AdtTypeCode.ContentTypeCode);
         }
 
         [Theory]
@@ -414,6 +423,7 @@ namespace Health.Direct.Context.Tests.ADTExtensions
             Assert.Equal("2.16.840.1.113883.19.999999:123456", context.Metadata.PatientId);
             Assert.Null(context.Metadata.FormatCode);
             Assert.Null(context.Metadata.ContextContentType);
+            Assert.Null(context.Metadata.AdtTypeCode);
             Assert.True(string.IsNullOrWhiteSpace(context.Metadata.CreationTime));
         }
     }
