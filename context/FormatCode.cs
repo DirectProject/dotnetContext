@@ -1,13 +1,13 @@
 ﻿namespace Health.Direct.Context
 {
     /// <summary>
-    /// Represents a <c>ihe-format-code</c>. 
+    /// Represents a <c>format-code</c>. 
     /// </summary>
     /// <remarks>
     /// This is an extension property to the direct context 1.1 IG as described in the Event Notifications via hte Direct Standard IG
     /// See <a href="https://directtrust.app.box.com/s/g7dmzskfmuczle0gzn9kk9gp0cfhjwhb">Event Notifitions via the Direct Standard</a>.
     ///
-    /// ihe-format-code-element = "ihe-format-code:" urn "/ "implementationguide" / "messagetype" / "version"
+    /// ihe-format-code-element = "format-code:" urn ":" implementationguide ":" messagetype ":" version
     ///
     /// urn = ihc:pcc
     /// implementationguide = HL7+NOD
@@ -24,12 +24,12 @@
         public string Version { get; set; }
 
         /// <summary>
-        /// Format <c>ihe-format-code value as urn/implementationguide/messagetype/version</c>.
+        /// Format <c>ihe-format-code value as urn:implementationguide:messagetype:version</c>.
         /// </summary>
         /// <returns></returns>
         public override string ToString()
         {
-            return $"{Urn}/{ImplementationGuide}/{MessageType}/{Version}";
+            return $"{Urn}:{ImplementationGuide}:{MessageType}:{Version}";
         }
     }
 }

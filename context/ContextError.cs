@@ -54,6 +54,10 @@ namespace Health.Direct.Context
         /// </summary>
         InvalidFormatCode,
         /// <summary>
+        /// Invalid <c>TypeCode</c> metadata.
+        /// </summary>
+        InvalidTypeCode,
+        /// <summary>
         /// Invalid <c>ContextContentType</c> metadata.
         /// </summary>
         InvalidContextContentType,
