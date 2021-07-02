@@ -1,5 +1,7 @@
 ﻿# Health.Direct.Context
 
+![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/JoeShook/b49a64c41decace4c01fc573ae307907/raw/direct-context-code-coverage.json)
+
 ## What is Direct.Health.Context
 
 This is a Microsoft .NET Core reference implementation library for Expressing Context in Direct Messaging.  The implementation guide is maintained at [www.directproject.org](http://wiki.directproject.org/file/detail/Implementation+Guide+for+Expressing+Context+in+Direct+Messaging+v1.0-DRAFT-2016122901.docx).
