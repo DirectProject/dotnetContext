@@ -1,5 +1,5 @@
 ﻿/* 
- Copyright (c) 2010-2017, Direct Project
+ Copyright (c) 2010-2021, Direct Project
  All rights reserved.
 
  Authors:
@@ -532,12 +532,10 @@ namespace Health.Direct.Context
         public class ContextContentType
         {
             /// <summary>
-            /// Name for the <c>content-type</c> header
+            /// Name for the <c>content-type-code</c> header
             /// </summary>
-            public const string Label = "context-content-type";
+            public const string Label = "content-type-code";
             
-            public const string OutputLabel = "content-type";
-
             public const int ContextContentTypeElementCount = 4;
             /// <summary>
             /// content-type-value 

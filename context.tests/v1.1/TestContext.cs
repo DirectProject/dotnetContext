@@ -42,7 +42,7 @@ namespace Health.Direct.Context.Tests.v1_1
             //
             // Metatdata PatientId
             //
-            Assert.Equal("2.16.840.1.113883.19.999999:123456; 2.16.840.1.113883.19.888888:75774", context.Metadata.PatientId);
+            Assert.Equal("2.16.840.1.113883.19.999999:123456;2.16.840.1.113883.19.888888:75774", context.Metadata.PatientId);
             Assert.Equal(2, context.Metadata.PatientIdentifier.Count());
             var patientIdentifiers = Enumerable.ToList(context.Metadata.PatientIdentifier);
             Assert.Equal("2.16.840.1.113883.19.999999", patientIdentifiers[0].PidContext);

@@ -19,6 +19,7 @@ namespace Health.Direct.Context.Tests
         [InlineData("ContextTestFiles/ContextSimple1.txtEightBit")]
         [InlineData("ContextTestFiles/ContextSimple1.txtQuotedPrintable")]
         [InlineData("ContextTestFiles/ContextSimple1.txtSevenBit")]
+        [InlineData("ContextTestFiles/ContextSimple2.txtSevenBit.lineContinuation")]
         //UUEncode not supported.   
         //[InlineData("ContextTestFiles/ContextSimple1.txtUUEncode")]
         public void TestParseContext(string file)
@@ -47,7 +48,7 @@ namespace Health.Direct.Context.Tests
             //
             // Metatdata PatientId
             //
-            Assert.Equal("2.16.840.1.113883.19.999999:123456; 2.16.840.1.113883.19.888888:75774", context.Metadata.PatientId);
+            Assert.Equal("2.16.840.1.113883.19.999999:123456;2.16.840.1.113883.19.888888:75774", context.Metadata.PatientId);
             Assert.Equal(2, context.Metadata.PatientIdentifier.Count());
             var patientIdentifiers = Enumerable.ToList(context.Metadata.PatientIdentifier);
             Assert.Equal("2.16.840.1.113883.19.999999", patientIdentifiers[0].PidContext);
@@ -192,6 +193,7 @@ namespace Health.Direct.Context.Tests
                 );
 
             var context = contextBuilder.Build();
+            context.Metadata.Id = "joe"; //Set value again
 
             //
             // Mime message and simple body
@@ -260,6 +262,8 @@ namespace Health.Direct.Context.Tests
             //
             // Metadata
             //
+            Assert.Equal("joe", context.Metadata.Id);
+
             Assert.Equal("1.0", contextParsed.Metadata.Version);
             Assert.Equal(context.Metadata.Id, contextParsed.Metadata.Id);
 

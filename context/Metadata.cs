@@ -1,5 +1,5 @@
 ﻿/* 
- Copyright (c) 2010-2017, Direct Project
+ Copyright (c) 2010-2021, Direct Project
  All rights reserved.
 
  Authors:
@@ -19,7 +19,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using MimeKit;
 
 namespace Health.Direct.Context
 {
@@ -29,29 +28,33 @@ namespace Health.Direct.Context
     public class Metadata 
     {
         private string patient;
-        
+
         /// <summary>
         /// Construct empty Metadata
         /// </summary>
         public Metadata() 
         {
-            Headers = new HeaderList();
+            MetadataElements = new List<MetadataElement>();
         }
 
-        /// <summary>
-        /// Construct Metadata from <see cref="MimePart.ContentObject"/>
-        /// </summary>
-        /// <param name="metadata"></param>
-        public Metadata(Stream metadata)
+        
+        public static Metadata Load(Stream stream)
         {
-            Headers = MimeEntity.Load(metadata).Headers;
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            var metadataParser = new MetadataParser(stream);
+            var metadata = new Metadata();
+            metadata.MetadataElements =  metadataParser.ParseMessage();
+            
+            return metadata;
         }
 
         /// <summary>
         /// Gets the list of headers.
         /// </summary>
         /// <value>The list of headers.</value>
-        public HeaderList Headers
+        public List<MetadataElement> MetadataElements
         {
             get; private set;
         }
@@ -249,10 +252,6 @@ namespace Health.Direct.Context
 
                 if (String.IsNullOrWhiteSpace(contentTypeCode))
                 {
-                    contentTypeCode = GetValue(ContextStandard.ContextContentType.OutputLabel);
-                }
-                if (String.IsNullOrWhiteSpace(contentTypeCode))
-                {
                     return null;
                 }
 
@@ -264,20 +263,27 @@ namespace Health.Direct.Context
             }
         }
 
-        private string GetValue(string headerName)
+        private string GetValue(string parameter)
         {
-            return Headers[headerName];
+            //return MetadataElements[headerName]; //Maybe create a MetadataElementList to optimize in future?
+            return MetadataElements
+                .FirstOrDefault(e => e.Field.Equals(parameter, StringComparison.InvariantCultureIgnoreCase))
+                ?.Value;
         }
 
-        private void SetValue(string headerName, string headerValue)
+        private void SetValue(string parameter, string value)
         {
-            if (Headers.Contains(headerName))
+            var element = MetadataElements
+                .FirstOrDefault(e => e.Field.Equals(parameter, StringComparison.InvariantCultureIgnoreCase));
+
+            if (element != null)
             {
-                Headers[headerName] = headerValue;
+                // Headers[headerName] = headerValue;
+                element.Value = value;
             }
             else
             {
-                Headers.Add(headerName, headerValue);
+                MetadataElements.Add(new MetadataElement(parameter, value));
             }
         }
 
@@ -295,7 +301,7 @@ namespace Health.Direct.Context
             // ADT context 1.1 extensions
             sb.AppendHeader(ContextStandard.CreationTime, CreationTime);
             sb.AppendHeader(ContextStandard.FormatCode.Label, FormatCode?.ToString());
-            sb.AppendHeader(ContextStandard.ContextContentType.OutputLabel, ContextContentType?.ToString());
+            sb.AppendHeader(ContextStandard.ContextContentType.Label, ContextContentType?.ToString());
 
             return sb.ToString();
         }

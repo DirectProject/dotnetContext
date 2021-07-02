@@ -1,5 +1,5 @@
 ﻿/* 
- Copyright (c) 2010-2017, Direct Project
+ Copyright (c) 2010-2021, Direct Project
  All rights reserved.
 
  Authors:
@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using MimeKit;
 
 namespace Health.Direct.Context
@@ -41,7 +42,7 @@ namespace Health.Direct.Context
         /// <param name="message"><see cref="MimePart"/></param>
         /// <param name="version"></param>
         /// <returns><see cref="Context"/>object</returns>
-        public static Context Parse(MimePart message, string version)
+        public static Context Parse(MimePart message, string version, CancellationToken cancellationToken = default)
         {
             if (message == null)
             {
@@ -56,7 +57,7 @@ namespace Health.Direct.Context
                 {
                     message.Content.DecodeTo(stream);
                     stream.Position = 0;
-                    metadata = new Metadata(stream);
+                    metadata = Metadata.Load(stream);
                 }
             }
             catch (Exception ex)
@@ -78,14 +79,15 @@ namespace Health.Direct.Context
         
         private static void VerifyVersion(Metadata metadata, string version)
         {
-            if (!metadata.Headers.Contains(ContextStandard.Version))
+            if (! metadata.MetadataElements.Any(e => 
+                e.Field.Equals(ContextStandard.Version, StringComparison.InvariantCultureIgnoreCase)))
             {
                 throw new ContextException(ContextError.MissingVersionIdentifier);
             }
 
-            if (!metadata.Headers.Select(h => 
-                h.Field == ContextStandard.Version &&
-                h.Value == version).Any())
+            if (!metadata.MetadataElements.Select(m => 
+                m.Field == ContextStandard.Version &&
+                m.Value == version).Any())
             {
                 throw new ContextException(ContextError.UnsupportedVersionIdentifier);
             }

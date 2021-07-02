@@ -19,11 +19,20 @@
     <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
   <ItemGroup>
     <None Include="context.nuspec" />
     <None Include="NOTICE.md" />
   </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="MimeKitLite" Version="2.11.0" />
+    <PackageReference Include="MimeKit" Version="2.13.0" />
   </ItemGroup>
 </Project>

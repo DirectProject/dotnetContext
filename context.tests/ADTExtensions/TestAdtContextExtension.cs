@@ -2,8 +2,6 @@
 using System.Linq;
 using System.Text;
 using context.tests.Extensions;
-using Health.Direct.Context;
-using Microsoft.VisualStudio.TestPlatform.CommunicationUtilities;
 using MimeKit;
 using MimeKit.Utils;
 using Xunit;
