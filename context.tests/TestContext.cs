@@ -203,8 +203,8 @@ namespace Health.Direct.Context.Tests
             message.To.Add(new MailboxAddress("Toby", "toby@redmond.hsgincubator.com"));
             message.Subject = "Sample message with pdf and context attached";
             message.Headers.Add(MailStandard.Headers.DirectContext, context.Headers[ContextStandard.ContentIdHeader]);
-            Assert.StartsWith("<", context.Headers[HeaderId.ContentId]);
-            Assert.EndsWith(">", context.Headers[HeaderId.ContentId]);
+            Assert.StartsWith("<", context.Headers[ContextStandard.ContentIdHeader]);
+            Assert.EndsWith(">", context.Headers[ContextStandard.ContentIdHeader]);
 
             var body = new TextPart("plain")
             {

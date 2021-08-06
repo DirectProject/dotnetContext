@@ -19,6 +19,7 @@ using System.Collections.Generic;
 using MimeKit;
 using System.IO;
 using System.Text;
+using Health.Direct.Context.Utils;
 using ContentDisposition = MimeKit.ContentDisposition;
 using MimePart = MimeKit.MimePart;
 
@@ -53,8 +54,8 @@ namespace Health.Direct.Context
         /// <returns>ContextBuilder</returns>
         public ContextBuilder WithContentId(string contentId)
         {
-            _directContext.ContentId = contentId;
-
+            _directContext.Headers[ContextStandard.ContentIdHeader] = contentId.FormatContentId();
+            
             return this;
         }
 
