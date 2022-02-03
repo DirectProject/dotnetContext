@@ -13,6 +13,24 @@ namespace Health.Direct.Context.Tests
     public class TestContext
     {
         [Theory]
+        [InlineData("ContextTestFiles/BadContext/ContextMissing.eml")]
+        [InlineData("ContextTestFiles/BadContext/NoContext.eml")]
+        public void MissingContext(string file)
+        {
+            var message = MimeMessage.Load(file);
+            Assert.Null(message.DirectContext());
+        }
+
+        [Theory]
+        [InlineData("ContextTestFiles/BadContext/ContextMissing.eml", "1.1")]
+        [InlineData("ContextTestFiles/BadContext/NoContext.eml", "1.1")]
+        public void MissingContextByVersion(string file, string version)
+        {
+            var message = MimeMessage.Load(file);
+            Assert.Null(message.DirectContext(version));
+        }
+
+        [Theory]
         [InlineData("ContextTestFiles/ContextSimple1.txtBase64")]
         [InlineData("ContextTestFiles/ContextSimple1.txtBinary")]
         [InlineData("ContextTestFiles/ContextSimple1.txtDefault")]

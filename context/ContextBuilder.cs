@@ -39,7 +39,7 @@ namespace Health.Direct.Context
         /// Defaults:
         ///   ContentType = text/plain
         ///   ContentId = new guid.
-        ///   Content-Dispostion = attachment; filename=metadata.txt
+        ///   Content-Disposition = attachment; filename=metadata.txt
         /// </remarks>
         /// </summary>
         public ContextBuilder()
@@ -48,19 +48,19 @@ namespace Health.Direct.Context
         }
 
         /// <summary>
-        /// Overide contentId
+        /// Override contentId
         /// </summary>
         /// <param name="contentId"></param>
         /// <returns>ContextBuilder</returns>
         public ContextBuilder WithContentId(string contentId)
         {
             _directContext.Headers[ContextStandard.ContentIdHeader] = contentId.FormatContentId();
-            
+
             return this;
         }
 
         /// <summary>
-        /// Overide Content-Disposition filename
+        /// Override Content-Disposition filename
         /// </summary>
         /// <param name="fileName">attachment filename</param>
         /// <returns>ContextBuilder</returns>
@@ -401,20 +401,20 @@ namespace Health.Direct.Context
         }
 
         /// <summary>
-        /// Prepare a RFC 5322 message searialized from a Contxt object 
+        /// Prepare a RFC 5322 message serialized from a Context object 
         /// </summary>
         /// <returns></returns>
         public MimePart BuildMimePart()
         {
             var mimePart = new MimePart(_directContext.ContentType)
             {
-                ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
                 ContentTransferEncoding = _directContext.ContentTransferEncoding
             };
 
+            mimePart.Headers.Add(ContextStandard.ContentIdHeader, _directContext.ContentId.FormatContentId());
             var contentDist = _directContext.ContentDisposition;
+            mimePart.ContentDisposition = new ContentDisposition(ContentDisposition.Attachment);
             mimePart.ContentDisposition.FileName = contentDist.FileName;
-            mimePart.ContentId = _directContext.ContentId;
 
             var contextBodyStream = new MemoryStream(Encoding.UTF8.GetBytes(_directContext.Metadata.Deserialize()));
             mimePart.Content = new MimeContent(contextBodyStream);
