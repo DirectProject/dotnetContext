@@ -9,7 +9,7 @@ This is a Microsoft .NET Core reference implementation library for Expressing Co
 ### Design of Context
 The Context library uses the excellent [MimeKit](https://github.com/jstedfast/MimeKit) library as the base for creating and parsing mime messages.  The Direct Project libraries are primarily parsers and not builders. The current implementation is targeted for [Direct Context]((https://wiki.directproject.org/Implementation_Guide_for_Expressing_Context_in_Direct_Messaging)) version 1.1 compliance.
 
-## Licesnse Information
+## License Information
 
 Copyright (c) 2010-2017, Direct Project
  All rights reserved.
