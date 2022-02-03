@@ -1,5 +1,5 @@
 ﻿/* 
- Copyright (c) 2010-2017, Direct Project
+ Copyright (c) 2010-2021, Direct Project
  All rights reserved.
 
  Authors:
@@ -14,10 +14,11 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
  
 */
 
+using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
-using MimeKit;
 
 namespace Health.Direct.Context
 {
@@ -27,29 +28,33 @@ namespace Health.Direct.Context
     public class Metadata 
     {
         private string patient;
-        
+
         /// <summary>
         /// Construct empty Metadata
         /// </summary>
         public Metadata() 
         {
-            Headers = new HeaderList();
+            MetadataElements = new List<MetadataElement>();
         }
 
-        /// <summary>
-        /// Construct Metadata from <see cref="MimePart.ContentObject"/>
-        /// </summary>
-        /// <param name="metadata"></param>
-        public Metadata(Stream metadata)
+        
+        public static Metadata Load(Stream stream)
         {
-            Headers = MimeEntity.Load(metadata).Headers;
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
+
+            var metadataParser = new MetadataParser(stream);
+            var metadata = new Metadata();
+            metadata.MetadataElements =  metadataParser.ParseMessage();
+            
+            return metadata;
         }
 
         /// <summary>
         /// Gets the list of headers.
         /// </summary>
         /// <value>The list of headers.</value>
-        public HeaderList Headers
+        public List<MetadataElement> MetadataElements
         {
             get; private set;
         }
@@ -203,20 +208,100 @@ namespace Health.Direct.Context
             }
         }
 
-        private string GetValue(string headerName)
+        // Admission, discharge, transfer extension properties
+
+        /// <summary>
+        /// Gets and sets the value of <c>creation-time</c> metadata. 
+        /// </summary>
+        public string CreationTime
         {
-            return Headers[headerName];
+            get
+            {
+                return GetValue(ContextStandard.CreationTime);
+            }
+            set
+            {
+                SetValue(ContextStandard.CreationTime, value);
+            }
         }
 
-        private void SetValue(string headerName, string headerValue)
+        public FormatCode FormatCode
         {
-            if (Headers.Contains(headerName))
+            get
             {
-                Headers[headerName] = headerValue;
+                var formatCodeValue = GetValue(ContextStandard.FormatCode.Label);
+
+                if (string.IsNullOrWhiteSpace(formatCodeValue))
+                {
+                    return null;
+                }
+
+                return ContextParser.ParseFormatCode(formatCodeValue);
+            }
+            set
+            {
+                SetValue(ContextStandard.FormatCode.Label, value.ToString());
+            }
+        }
+
+        public AdtTypeCode AdtTypeCode
+        {
+            get
+            {
+                var adtTypeCodeValue = GetValue(ContextStandard.AdtTypeCode);
+
+                if (string.IsNullOrEmpty(adtTypeCodeValue))
+                {
+                    return null;
+                }
+
+                return ContextParser.ParseAdtTypeCode(adtTypeCodeValue);
+            }
+            set
+            {
+                SetValue(ContextStandard.AdtTypeCode, value.ToString());
+            }
+        }
+        public ContextContentType ContextContentType
+        {
+            get
+            {
+                var contentTypeCode = GetValue(ContextStandard.ContextContentType);
+
+                if (string.IsNullOrWhiteSpace(contentTypeCode))
+                {
+                    return null;
+                }
+
+                return ContextParser.ParseContextContentType(contentTypeCode);
+            }
+            set
+            {
+                SetValue(ContextStandard.ContextContentType, value.ToString());
+            }
+        }
+
+        private string GetValue(string parameter)
+        {
+            //return MetadataElements[headerName]; //Maybe create a MetadataElementList to optimize in future?
+            return MetadataElements
+                .FirstOrDefault(e => e.Field.Equals(parameter, StringComparison.InvariantCultureIgnoreCase))
+                ?.Value;
+        }
+
+        private void SetValue(string parameter, string value)
+        {
+            var element = MetadataElements
+                .FirstOrDefault(e => e.Field.Equals(parameter, StringComparison.InvariantCultureIgnoreCase));
+
+            if (element != null)
+            {
+                // Headers[headerName] = headerValue;
+                element.Value = value;
             }
             else
             {
-                Headers.Add(headerName, headerValue);
+                MetadataElements.Add(new MetadataElement(parameter, value));
             }
         }
 
@@ -230,6 +315,12 @@ namespace Health.Direct.Context
             sb.AppendHeader(ContextStandard.Type.Label, Type?.ToString());
             sb.AppendHeader(ContextStandard.Purpose.Label, Purpose);
             sb.AppendHeader(ContextStandard.Patient.Label, Patient?.ToString());
+
+            // ADT context 1.1 extensions
+            sb.AppendHeader(ContextStandard.CreationTime, CreationTime);
+            sb.AppendHeader(ContextStandard.FormatCode.Label, FormatCode?.ToString());
+            sb.AppendHeader(ContextStandard.ContextContentType, ContextContentType?.ToString());
+            sb.AppendHeader(ContextStandard.AdtTypeCode, AdtTypeCode?.ToString());
 
             return sb.ToString();
         }

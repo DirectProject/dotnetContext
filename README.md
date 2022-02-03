@@ -1,13 +1,15 @@
 ﻿# Health.Direct.Context
 
+![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/JoeShook/b49a64c41decace4c01fc573ae307907/raw/direct-context-code-coverage.json)
+
 ## What is Direct.Health.Context
 
-This is a Microsoft .NET Core reference implementation library for Expressing Context in Direct Messaging.  The implementation guide is maintained at [www.directproject.org](http://wiki.directproject.org/file/detail/Implementation+Guide+for+Expressing+Context+in+Direct+Messaging+v1.0-DRAFT-2016122901.docx).
+This is a Microsoft .NET Core reference implementation library for Expressing Context in Direct Messaging.  The implementation guide is maintained at [www.directproject.org](https://wiki.directproject.org/Main_Page).
 
 ### Design of Context
-The Context library uses the excellent [MimeKit](https://github.com/jstedfast/MimeKit) library as the base for creating and parsing mime messages.  The Direct Project libraries are primarily parsers and not builders. The current implementation is targeted for [Direct Context]((http://wiki.directproject.org/file/detail/Implementation+Guide+for+Expressing+Context+in+Direct+Messaging+v1.0-DRAFT-2016122901.docx)) version 1.0 compliance.
+The Context library uses the excellent [MimeKit](https://github.com/jstedfast/MimeKit) library as the base for creating and parsing mime messages.  The Direct Project libraries are primarily parsers and not builders. The current implementation is targeted for [Direct Context]((https://wiki.directproject.org/Implementation_Guide_for_Expressing_Context_in_Direct_Messaging)) version 1.1 compliance.
 
-## Licesnse Information
+## License Information
 
 Copyright (c) 2010-2017, Direct Project
  All rights reserved.

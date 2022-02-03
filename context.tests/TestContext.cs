@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using context.tests.Extensions;
 using MimeKit;
 using MimeKit.Utils;
 using Xunit;
@@ -12,12 +13,31 @@ namespace Health.Direct.Context.Tests
     public class TestContext
     {
         [Theory]
+        [InlineData("ContextTestFiles/BadContext/ContextMissing.eml")]
+        [InlineData("ContextTestFiles/BadContext/NoContext.eml")]
+        public void MissingContext(string file)
+        {
+            var message = MimeMessage.Load(file);
+            Assert.Null(message.DirectContext());
+        }
+
+        [Theory]
+        [InlineData("ContextTestFiles/BadContext/ContextMissing.eml", "1.1")]
+        [InlineData("ContextTestFiles/BadContext/NoContext.eml", "1.1")]
+        public void MissingContextByVersion(string file, string version)
+        {
+            var message = MimeMessage.Load(file);
+            Assert.Null(message.DirectContext(version));
+        }
+
+        [Theory]
         [InlineData("ContextTestFiles/ContextSimple1.txtBase64")]
         [InlineData("ContextTestFiles/ContextSimple1.txtBinary")]
         [InlineData("ContextTestFiles/ContextSimple1.txtDefault")]
         [InlineData("ContextTestFiles/ContextSimple1.txtEightBit")]
         [InlineData("ContextTestFiles/ContextSimple1.txtQuotedPrintable")]
         [InlineData("ContextTestFiles/ContextSimple1.txtSevenBit")]
+        [InlineData("ContextTestFiles/ContextSimple2.txtSevenBit.lineContinuation")]
         //UUEncode not supported.   
         //[InlineData("ContextTestFiles/ContextSimple1.txtUUEncode")]
         public void TestParseContext(string file)
@@ -46,7 +66,7 @@ namespace Health.Direct.Context.Tests
             //
             // Metatdata PatientId
             //
-            Assert.Equal("2.16.840.1.113883.19.999999:123456; 2.16.840.1.113883.19.888888:75774", context.Metadata.PatientId);
+            Assert.Equal("2.16.840.1.113883.19.999999:123456;2.16.840.1.113883.19.888888:75774", context.Metadata.PatientId);
             Assert.Equal(2, context.Metadata.PatientIdentifier.Count());
             var patientIdentifiers = Enumerable.ToList(context.Metadata.PatientIdentifier);
             Assert.Equal("2.16.840.1.113883.19.999999", patientIdentifiers[0].PidContext);
@@ -191,6 +211,7 @@ namespace Health.Direct.Context.Tests
                 );
 
             var context = contextBuilder.Build();
+            context.Metadata.Id = "joe"; //Set value again
 
             //
             // Mime message and simple body
@@ -200,8 +221,8 @@ namespace Health.Direct.Context.Tests
             message.To.Add(new MailboxAddress("Toby", "toby@redmond.hsgincubator.com"));
             message.Subject = "Sample message with pdf and context attached";
             message.Headers.Add(MailStandard.Headers.DirectContext, context.Headers[ContextStandard.ContentIdHeader]);
-            Assert.StartsWith("<", context.Headers[HeaderId.ContentId]);
-            Assert.EndsWith(">", context.Headers[HeaderId.ContentId]);
+            Assert.StartsWith("<", context.Headers[ContextStandard.ContentIdHeader]);
+            Assert.EndsWith(">", context.Headers[ContextStandard.ContentIdHeader]);
 
             var body = new TextPart("plain")
             {
@@ -259,6 +280,8 @@ namespace Health.Direct.Context.Tests
             //
             // Metadata
             //
+            Assert.Equal("joe", context.Metadata.Id);
+
             Assert.Equal("1.0", contextParsed.Metadata.Version);
             Assert.Equal(context.Metadata.Id, contextParsed.Metadata.Id);
 
@@ -321,51 +344,6 @@ namespace Health.Direct.Context.Tests
             AssertEqual(Enumerable.ToList(directMessage.SelectEncapulations()), Enumerable.ToList(echoMessage.SelectEncapulations()));
         }
 
-        [Theory]
-        [InlineData("ContextTestFiles/ContextSimple1.AdditionalElements")]
-        public void TestContextParserIgnoresFutureExtensions(string file)
-        {
-            var directMessage = MimeMessage.Load(file);
-            var context = directMessage.DirectContext();
-
-            //
-            // Metadata
-            //
-            Assert.Equal("1.1", context.Metadata.Version);
-            Assert.Equal("<2142848@direct.example.com>", context.Metadata.Id);
-
-            //
-            // Metatdata PatientId
-            //
-            Assert.Equal("2.16.840.1.113883.19.999999:123456", context.Metadata.PatientId);
-            Assert.Single(context.Metadata.PatientIdentifier);
-            var patientIdentifiers = Enumerable.ToList(context.Metadata.PatientIdentifier);
-            Assert.Equal("2.16.840.1.113883.19.999999", patientIdentifiers[0].PidContext);
-            Assert.Equal("123456", patientIdentifiers[0].LocalPatientId);
-
-            //
-            // Metatdata Type
-            //
-            Assert.Equal("radiology/report", context.Metadata.Type.ToString());
-            Assert.Equal("radiology", context.Metadata.Type.Category);
-            Assert.Equal("report", context.Metadata.Type.Action);
-
-            //
-            // Metatdata Purpose
-            //
-            Assert.Equal("research", context.Metadata.Purpose);
-
-            //
-            // Metadata Patient
-            //
-            Assert.Equal("givenName=John; surname=Doe; middleName=Jacob; dateOfBirth=1961-12-31; gender=M; postalCode=12345",
-                context.Metadata.Patient.ToString());
-
-            Assert.Equal("John", context.Metadata.Patient.GivenName);
-            Assert.Equal("Doe", context.Metadata.Patient.SurName);
-            Assert.Equal("1961-12-31", context.Metadata.Patient.DateOfBirth);
-        }
-
         private void AssertEqual(List<MimePart> expected, List<MimePart> actual)
         {
             if (expected == null) throw new ArgumentNullException(nameof(expected));
@@ -409,20 +387,6 @@ namespace Health.Direct.Context.Tests
             Assert.Equal(context.Metadata.Patient?.PostalCode, messageRebuilt.Metadata.Patient?.PostalCode);
 
             Assert.Equal(context.Metadata.Encapsulation?.Type, messageRebuilt.Metadata.Encapsulation?.Type);
-        }
-    }
-
-
-    public static class Extensions
-    {
-        public static Stream ToStream(this string str)
-        {
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
-            writer.Write(str);
-            writer.Flush();
-            stream.Position = 0;
-            return stream;
         }
     }
 }

@@ -1,5 +1,5 @@
 ﻿/* 
- Copyright (c) 2010-2017, Direct Project
+ Copyright (c) 2010-2021, Direct Project
  All rights reserved.
 
  Authors:
@@ -84,8 +84,7 @@ namespace Health.Direct.Context
         /// Name for the <c>patient-id</c> header
         /// </summary>
         public const string PatientId = "patient-id";
-
-
+        
         /// <summary>
         /// Transaction type 
         /// </summary>
@@ -232,10 +231,6 @@ namespace Health.Direct.Context
                 Notification
             }
         }
-
-
-        
-
         
         /// <summary>
         /// Context: Purpose types
@@ -445,7 +440,6 @@ namespace Health.Direct.Context
             }
         }
         
-        
         /// <summary>
         /// List of possible <c>encapsulated-message-type</c>s
         /// </summary>
@@ -482,5 +476,64 @@ namespace Health.Direct.Context
                 Hl7V2
             }
         }
+
+        // Admission, Discharge and Transfer extension methods
+        /// <summary>
+        /// Name for the <c>creation-time</c> header
+        /// </summary>
+        public const string CreationTime = "creation-time";
+
+        /// <summary>
+        /// Context content type for <c>format-code</c> header
+        /// </summary>
+        public class FormatCode
+        {
+            /// <summary>
+            /// Name for the <c>format-code</c> header
+            /// </summary>
+            public const string Label = "format-code";
+
+            public const int FormatCodeElementCount = 4;
+            /// <summary>
+            /// ihe-format-code-value 
+            /// </summary>
+            public enum FormatCodeParameter
+            {
+                /// <summary>
+                /// Unknown.
+                /// </summary>
+                Unknown = 0,
+
+                /// <summary>
+                /// The <c>urn format-code-parameter</c>
+                /// </summary>
+                Urn,
+
+                /// <summary>
+                /// The <c>implementationguide format-code-parameter</c>
+                /// </summary>
+                ImplementationGuide,
+
+                /// <summary>
+                /// The <c>messagetype format-code-parameter</c>
+                /// </summary>
+                NessageType,
+
+                /// <summary>
+                /// The <c>version format-code-parameter</c>
+                /// </summary>
+                Version
+            }
+        }
+
+        /// <summary>
+        /// Name for <c>content-type-code</c> header
+        /// </summary>
+        public const string ContextContentType = "content-type-code";
+
+        /// <summary>
+        /// Name for <c>type-code</c> header
+        /// </summary>
+        public const string AdtTypeCode = "type-code";
     }
 }

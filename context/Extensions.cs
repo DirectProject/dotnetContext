@@ -1,5 +1,5 @@
 ﻿/* 
- Copyright (c) 2010-2017, Direct Project
+ Copyright (c) 2010-2021, Direct Project
  All rights reserved.
 
  Authors:
@@ -36,6 +36,11 @@ namespace Health.Direct.Context
         /// <returns>A <see cref="Context"/> object if found.  Null if not found. </returns>
         public static Context DirectContext(this MimeMessage message)
         {
+            if (!message.ContainsDirectContext())
+            {
+                return null;
+            }
+
             foreach (var mimeEntity in message.Attachments.Where(a => a is MimePart))
             {
                 if (mimeEntity.ContentId == message.DirectContextId())
@@ -55,6 +60,11 @@ namespace Health.Direct.Context
         /// <returns></returns>
         public static MimePart DirectContext(this MimeMessage message, string version)
         {
+            if (!message.ContainsDirectContext())
+            {
+                return null;
+            }
+
             foreach (var mimeEntity in message.Attachments.Where(a => a is MimePart))
             {
                 if (mimeEntity.ContentId == message.DirectContextId())

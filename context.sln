@@ -11,8 +11,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.github\workflows\dotnet.yml = .github\workflows\dotnet.yml
 		.github\workflows\prerelease.txt = .github\workflows\prerelease.txt
+		README.md = README.md
 		.github\workflows\release.yml = .github\workflows\release.yml
 	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "benchmarks", "benchmarks", "{F330F87B-0538-4970-A4F0-AA208E0CA174}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Health.Direct.Context.Benchmarks", "benchmarks\Health.Direct.Context.Benchmarks\Health.Direct.Context.Benchmarks.csproj", "{D14290CB-CD0C-427E-9862-411910F3BE70}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -28,9 +33,16 @@ Global
 		{F1A6EBDB-2AB1-40D4-9BC3-4DA75F6DE332}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1A6EBDB-2AB1-40D4-9BC3-4DA75F6DE332}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1A6EBDB-2AB1-40D4-9BC3-4DA75F6DE332}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D14290CB-CD0C-427E-9862-411910F3BE70}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D14290CB-CD0C-427E-9862-411910F3BE70}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D14290CB-CD0C-427E-9862-411910F3BE70}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D14290CB-CD0C-427E-9862-411910F3BE70}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D14290CB-CD0C-427E-9862-411910F3BE70} = {F330F87B-0538-4970-A4F0-AA208E0CA174}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1EA323C6-0E37-4A3B-A973-69DA8BA0BDEB}

@@ -1,5 +1,5 @@
 ﻿/* 
- Copyright (c) 2010-2017, Direct Project
+ Copyright (c) 2010-2021, Direct Project
  All rights reserved.
 
  Authors:
@@ -18,6 +18,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
 using MimeKit;
 
 namespace Health.Direct.Context
@@ -41,7 +42,7 @@ namespace Health.Direct.Context
         /// <param name="message"><see cref="MimePart"/></param>
         /// <param name="version"></param>
         /// <returns><see cref="Context"/>object</returns>
-        public static Context Parse(MimePart message, string version)
+        public static Context Parse(MimePart message, string version, CancellationToken cancellationToken = default)
         {
             if (message == null)
             {
@@ -56,7 +57,7 @@ namespace Health.Direct.Context
                 {
                     message.Content.DecodeTo(stream);
                     stream.Position = 0;
-                    metadata = new Metadata(stream);
+                    metadata = Metadata.Load(stream);
                 }
             }
             catch (Exception ex)
@@ -78,14 +79,15 @@ namespace Health.Direct.Context
         
         private static void VerifyVersion(Metadata metadata, string version)
         {
-            if (!metadata.Headers.Contains(ContextStandard.Version))
+            if (! metadata.MetadataElements.Any(e => 
+                e.Field.Equals(ContextStandard.Version, StringComparison.InvariantCultureIgnoreCase)))
             {
                 throw new ContextException(ContextError.MissingVersionIdentifier);
             }
 
-            if (!metadata.Headers.Select(h => 
-                h.Field == ContextStandard.Version &&
-                h.Value == version).Any())
+            if (!metadata.MetadataElements.Select(m => 
+                m.Field == ContextStandard.Version &&
+                m.Value == version).Any())
             {
                 throw new ContextException(ContextError.UnsupportedVersionIdentifier);
             }
@@ -131,7 +133,6 @@ namespace Health.Direct.Context
             };
         }
 
-        
         internal static Encapsulation ParseEncapsulation(string headerValue)
         {
             headerValue.AssertEnum<ContextStandard.Encapsulation.Type>(ContextError.InvalidType);
@@ -141,6 +142,58 @@ namespace Health.Direct.Context
                 Type = headerValue
             };
         }
+
+        #region ADT Context v1.1 Extension properties
+        internal static FormatCode ParseFormatCode(string headerValue)
+        {
+            var typeValue = Split(headerValue, new[] { ':' }, ContextError.InvalidFormatCode);
+
+            if (typeValue.Count != ContextStandard.FormatCode.FormatCodeElementCount)
+            {
+                throw new ContextException(ContextError.InvalidFormatCode);
+            }
+
+            return new FormatCode()
+            {
+                Urn = typeValue[0],
+                ImplementationGuide = typeValue[1],
+                MessageType = typeValue[2],
+                Version = typeValue[3]
+            };
+        }
+
+        internal static AdtTypeCode ParseAdtTypeCode(string headerValue)
+        {
+            var typeCode = Split(headerValue, new[] {':'}, ContextError.InvalidTypeCode);
+
+            if (typeCode.Count != 2)
+            {
+                throw new ContextException(ContextError.InvalidTypeCode);
+            }
+
+            return new AdtTypeCode()
+            {
+                ContentTypeSystem = typeCode[0],
+                ContentTypeCode = typeCode[1]
+            };
+        }
+
+        internal static ContextContentType ParseContextContentType(string headerValue)
+        {
+            var typeValue = Split(headerValue, new[] { ':' }, ContextError.InvalidContextContentType);
+
+            if (typeValue.Count != 2)
+            {
+                throw new ContextException(ContextError.InvalidContextContentType);
+            }
+
+            return new ContextContentType()
+            {
+                ContentTypeSystem = typeValue[0],
+                ContentTypeCode = typeValue[1]
+            };
+        }
+        #endregion
 
         static readonly char[] s_fieldSeparator = { ';' };
 

@@ -1,5 +1,5 @@
 ﻿/* 
- Copyright (c) 2010-2017, Direct Project
+ Copyright (c) 2010-2021, Direct Project
  All rights reserved.
 
  Authors:
@@ -48,6 +48,18 @@ namespace Health.Direct.Context
         /// <summary>
         /// Invalid <c>patient</c> metadata.
         /// </summary>
-        InvalidPatient
+        InvalidPatient,
+        /// <summary>
+        /// Invalid <c>FormatCode</c> metadata.
+        /// </summary>
+        InvalidFormatCode,
+        /// <summary>
+        /// Invalid <c>TypeCode</c> metadata.
+        /// </summary>
+        InvalidTypeCode,
+        /// <summary>
+        /// Invalid <c>ContextContentType</c> metadata.
+        /// </summary>
+        InvalidContextContentType,
     }
 }

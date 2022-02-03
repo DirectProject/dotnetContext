@@ -1,5 +1,5 @@
 ﻿/* 
- Copyright (c) 2010-2017, Direct Project
+ Copyright (c) 2010-2021, Direct Project
  All rights reserved.
 
  Authors:
@@ -15,6 +15,7 @@ THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND 
 */
 
 using System;
+using Health.Direct.Context.Utils;
 using MimeKit;
 using MimePart = MimeKit.MimePart;
 
@@ -46,7 +47,7 @@ namespace Health.Direct.Context
         public Context(): this("text", "plain")
         {
             Metadata = new Metadata();
-            ContentId = Guid.NewGuid().ToString("N");
+            this.Headers.Add(ContextStandard.ContentIdHeader, Guid.NewGuid().ToString("N").FormatContentId());
             ContentDisposition = new ContentDisposition(MimeStandard.DispositionType.Attachment);
             ContentDisposition.FileName = FileNameValue;
         }
@@ -63,7 +64,7 @@ namespace Health.Direct.Context
             : base (mediaType, mediaSubtype)
         {
             Metadata = new Metadata();
-            ContentId = contentId;
+            this.Headers[ContextStandard.ContentIdHeader] = contentId.FormatContentId();
             ContentDisposition.FileName = filename;
         }
 
@@ -74,7 +75,7 @@ namespace Health.Direct.Context
             : base(mediaType, mediaSubtype)
         {
             Metadata = metadata;
-            ContentId = contentId;
+            this.Headers[ContextStandard.ContentIdHeader] = contentId.FormatContentId();
             ContentDisposition = new ContentDisposition(MimeStandard.DispositionType.Attachment);
             ContentDisposition.FileName = filename;
         }

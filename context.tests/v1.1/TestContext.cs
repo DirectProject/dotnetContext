@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using context.tests.Extensions;
 using MimeKit;
 using MimeKit.Utils;
 using Xunit;
@@ -41,7 +42,7 @@ namespace Health.Direct.Context.Tests.v1_1
             //
             // Metatdata PatientId
             //
-            Assert.Equal("2.16.840.1.113883.19.999999:123456; 2.16.840.1.113883.19.888888:75774", context.Metadata.PatientId);
+            Assert.Equal("2.16.840.1.113883.19.999999:123456;2.16.840.1.113883.19.888888:75774", context.Metadata.PatientId);
             Assert.Equal(2, context.Metadata.PatientIdentifier.Count());
             var patientIdentifiers = Enumerable.ToList(context.Metadata.PatientIdentifier);
             Assert.Equal("2.16.840.1.113883.19.999999", patientIdentifiers[0].PidContext);
@@ -219,20 +220,6 @@ namespace Health.Direct.Context.Tests.v1_1
             Assert.Equal("John County", context.Metadata.Patient.LocalityName);
             Assert.Equal("US", context.Metadata.Patient.Country);
             Assert.Equal("New York", context.Metadata.Patient.StateOrProvinceName);
-        }
-    }
-
-
-    public static class Extensions
-    {
-        public static Stream ToStream(this string str)
-        {
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
-            writer.Write(str);
-            writer.Flush();
-            stream.Position = 0;
-            return stream;
         }
     }
 }
