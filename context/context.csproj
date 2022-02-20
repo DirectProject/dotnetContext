@@ -4,20 +4,19 @@
     <Product>DirectProject.DotNet.Context</Product>
     <AssemblyName>Health.Direct.Context</AssemblyName>
     <RootNamespace>Health.Direct.Context</RootNamespace>
-    <Version>0.0.0</Version>
+    <Version>1.1.1</Version>
     <IncludeSource>True</IncludeSource>
-  </PropertyGroup>
-
-  <PropertyGroup>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Copyright>Copyright (c) 2010-2022, Direct Project</Copyright>
+    <PackageProjectUrl>https://github.com/DirectProject/dotnetContext</PackageProjectUrl>
+    <Authors>Joe Shook</Authors>
     <PackageId>DirectProject.DotNet.Context</PackageId>
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/DirectProject/dotnetContext</RepositoryUrl>
+    <PackageReleaseNotes>V1.1 Parser+ Compatible with CMS ADT Notifications</PackageReleaseNotes>
+    <PackageTags>DirectSecureMessaging;ADTnotifications</PackageTags>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <DebugType>full</DebugType>
-    <DebugSymbols>true</DebugSymbols>
-  </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -28,6 +27,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Include="docs\README.md" Pack="True" PackagePath="\" />
     <None Include="context.nuspec" />
     <None Include="NOTICE.md" />
   </ItemGroup>
