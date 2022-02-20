@@ -27,12 +27,16 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="docs\README.md" Pack="True" PackagePath="\" />
+    <None Include="..\README.md" Pack="True" PackagePath="\" />
     <None Include="context.nuspec" />
     <None Include="NOTICE.md" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="MimeKit" Version="3.1.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="docs\" />
   </ItemGroup>
 </Project>
