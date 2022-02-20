@@ -1,5 +1,9 @@
 ﻿# Health.Direct.Context
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+[![Twitter](https://img.shields.io/twitter/url/http/shields.io.svg?style=flat&logo=twitter)](https://twitter.com/intent/tweet?hashtags=DirectSecureMessaging,ADTnotifications,dotnet,oss,csharp&text=🚀+FusionCache.Metrics:+FusionCche+metric+plugins&url=https%3A%2F%2Fgithub.com%2Fjoeshook%2FZiggyCreatures.FusionCache.Metrics&via=josephshook)
+
+
 ![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/JoeShook/b49a64c41decace4c01fc573ae307907/raw/direct-context-code-coverage.json)
 
 ## What is Direct.Health.Context
@@ -7,7 +11,10 @@
 This is a Microsoft .NET Core reference implementation library for Expressing Context in Direct Messaging.  The implementation guide is maintained at [www.directproject.org](https://wiki.directproject.org/Main_Page).
 
 ### Design of Context
-The Context library uses the excellent [MimeKit](https://github.com/jstedfast/MimeKit) library as the base for creating and parsing mime messages.  The Direct Project libraries are primarily parsers and not builders. The current implementation is targeted for [Direct Context]((https://wiki.directproject.org/Implementation_Guide_for_Expressing_Context_in_Direct_Messaging)) version 1.1 compliance.
+The Context library uses the excellent [MimeKit](https://github.com/jstedfast/MimeKit) library as the base for creating and parsing mime messages.  The Direct Project libraries are primarily parsers and not builders. The current implementation is targeted for [Direct Context]((https://wiki.directproject.org/Implementation_Guide_for_Expressing_Context_in_Direct_Messaging)) version 1.1 compliance and recent ADT Notification requirements.  If you find any issues, please create and issue and/or email me directly.  I created this project in 2017 when I was very intimate with the details.  Recently I revisited this project to bring it from 1.0 to 1.1 with respect to the [Direct Context Guide]((https://wiki.directproject.org/Implementation_Guide_for_Expressing_Context_in_Direct_Messaging)), in addition making it compatible with [ADT Notifications](https://directtrust.org/standards/event-notifications-via-direct).  
+
+Originally [Direct Context]((https://wiki.directproject.org/Implementation_Guide_for_Expressing_Context_in_Direct_Messaging)) was intended to evolve as various versions bound to a specification version.  For example, an application hosting multiple versions of the parser would decide which parser to load based on the version header value in the Context part.  To this point I don't believe any context other than 1.1 has ever been put into production.  ADT Notifications violate the code version binding to a Direct Context specification.  I imagine the spec will catch up at some point.  My hope is the concept of DirectContext could make way for completely different contexts, that allow for other interesting workflows.  Senders and receivers would need to understand the two contexts, but they could be anything such as carrying patient consent requests and answers.  In such a workflow we would just create a new DirectContext but the version would be something completely different such as pc-1.0 which would load the appropriate context object and leading to specific workflow actions.  
+
 
 ## License Information
 
