@@ -84,12 +84,12 @@ namespace Health.Direct.Context
         /// Name for the <c>patient-id</c> header
         /// </summary>
         public const string PatientId = "patient-id";
-        
+
         /// <summary>
         /// Transaction type 
         /// </summary>
         /// <remarks>
-        /// See <a href="http://wiki.directproject.org/file/detail/Implementation+Guide+for+Expressing+Context+in+Direct+Messaging+v1.0-DRAFT-2016122901.docx"> Context in Direct</a>.
+        /// See <a href="https://wiki.directproject.org/File:Implementation_Guide_for_Expressing_Context_in_Direct_Messaging_v1.1.pdf"> Context in Direct</a>.
         /// </remarks>
         public class Type
         {
