@@ -7,7 +7,7 @@
 
 ## What is Direct.Health.Context
 
-This is a Microsoft .NET Core reference implementation library for Expressing Context in Direct Messaging.  The implementation guide is maintained at [www.directproject.org](https://wiki.directproject.org/Main_Page).
+This is a Microsoft .NET Core reference implementation library for Expressing Context in Direct Messaging.  The implementation guide is maintained at [www.directproject.org](https://wiki.directproject.org/File/view/Implementation%2BGuide%2Bfor%2BExpressing%2BContext%2Bin%2BDirect%2BMessaging%2Bv1.1.pdf).
 
 ### Design of Context
 
